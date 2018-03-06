@@ -20,7 +20,7 @@ public class DBConnect {
             return conn;
         }catch(Exception e) {
             Log.v("unable to connect", e.getMessage());
-            
+
 
         }
         return null;
