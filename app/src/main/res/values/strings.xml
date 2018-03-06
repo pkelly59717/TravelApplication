@@ -1,0 +1,8 @@
+<resources>
+    <string name="API_Key">AIzaSyC7owlS13A3IoTg8bom7WLYsLZiBwRAJtQ</string>
+
+    <string name="app_name">TravelApplication</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log In</string>
+</resources>
