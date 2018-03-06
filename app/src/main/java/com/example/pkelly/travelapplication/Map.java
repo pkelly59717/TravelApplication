@@ -152,7 +152,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                         || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
 
                     //execute our method for searching
-
                     geoLocate();
                 }
 
