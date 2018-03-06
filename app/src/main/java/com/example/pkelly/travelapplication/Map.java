@@ -90,7 +90,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
 
     //widgets
     private AutoCompleteTextView mSearchText;
-    private ImageView mGps, mInfo, mPlacePicker;
+    private ImageView mGps, mInfo, mPlacePicker, mClearMap;
 
     //vars
     private Boolean mLocationPermissionsGranted = false;
@@ -135,6 +135,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         mGps = (ImageView) findViewById(R.id.ic_gps);
         mInfo = (ImageView) findViewById(R.id.place_info);
         mPlacePicker = (ImageView) findViewById(R.id.place_picker);
+        mClearMap = (ImageView) findViewById(R.id.clear_map);
         listPoints = new ArrayList<>();
 
         getLocationPermission();
@@ -212,6 +213,13 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 } catch (GooglePlayServicesNotAvailableException e) {
                     Log.e(TAG, "onClick: GooglePlayServicesNotAvailableException: " + e.getMessage() );
                 }
+            }
+        });
+
+        mClearMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClearMap();
             }
         });
 
@@ -603,8 +611,12 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 Log.e(TAG, "onResult: NullPointerException: " + e.getMessage() );
             }
 
-            moveCamera(new LatLng(place.getViewport().getCenter().latitude,
-                    place.getViewport().getCenter().longitude), DEFAULT_ZOOM, mPlace);
+            ClearMap();
+            listPoints = new ArrayList<>();
+            LatLng ll = new LatLng(place.getViewport().getCenter().latitude,
+                    place.getViewport().getCenter().longitude);
+            listPoints.add(ll);
+            moveCamera(ll, DEFAULT_ZOOM, mPlace);
 
             places.release();
         }
