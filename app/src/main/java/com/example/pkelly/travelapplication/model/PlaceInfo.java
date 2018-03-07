@@ -1,4 +1,4 @@
-package com.example.pkelly.travelapplication.models;
+package com.example.pkelly.travelapplication.model;
 
 import android.net.Uri;
 
