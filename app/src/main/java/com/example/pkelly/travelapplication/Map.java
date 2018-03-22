@@ -239,18 +239,22 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 }
                 mMap.addMarker(markerOptions);
 
-                if (listPoints.size() >= 2) {
-                    //Create the URL to get request from first marker to second marker
-                    for(int i = 0; i < listPoints.size() -1; i++) {
-                        String url = getRequestUrl(listPoints.get(i), listPoints.get(i+1));
-                        TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-                        taskRequestDirections.execute(url);
-                    }
-                }
+                getLocation();
             }
         });
 
         hideSoftKeyboard();
+    }
+
+    private void getLocation() {
+        if (listPoints.size() >= 2) {
+            //Create the URL to get request from first marker to second marker
+            for(int i = 0; i < listPoints.size() -1; i++) {
+                String url = getRequestUrl(listPoints.get(i), listPoints.get(i+1));
+                TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                taskRequestDirections.execute(url);
+            }
+        }
     }
 
     private String getRequestUrl(LatLng origin, LatLng dest) {
@@ -457,7 +461,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
-        mMap.clear();
+        //mMap.clear();
 
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Map.this));
 
@@ -577,14 +581,14 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
     private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(@NonNull PlaceBuffer places) {
-            if(!places.getStatus().isSuccess()){
+            if (!places.getStatus().isSuccess()) {
                 Log.d(TAG, "onResult: Place query did not complete successfully: " + places.getStatus().toString());
                 places.release();
                 return;
             }
             final Place place = places.get(0);
 
-            try{
+            try {
                 mPlace = new PlaceInfo();
                 mPlace.setName(place.getName().toString());
                 Log.d(TAG, "onResult: name: " + place.getName());
@@ -604,18 +608,22 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 Log.d(TAG, "onResult: website uri: " + place.getWebsiteUri());
 
                 Log.d(TAG, "onResult: place: " + mPlace.toString());
-            }catch (NullPointerException e){
-                Log.e(TAG, "onResult: NullPointerException: " + e.getMessage() );
+            } catch (NullPointerException e) {
+                Log.e(TAG, "onResult: NullPointerException: " + e.getMessage());
             }
 
-            ClearMap();
-            listPoints = new ArrayList<>();
+            //ClearMap();
+            if (listPoints == null || listPoints.size() == 0){
+                listPoints = new ArrayList<>();
+            }
             LatLng ll = new LatLng(place.getViewport().getCenter().latitude,
                     place.getViewport().getCenter().longitude);
             listPoints.add(ll);
             moveCamera(ll, DEFAULT_ZOOM, mPlace);
 
             places.release();
+
+            getLocation();
         }
     };
 }
