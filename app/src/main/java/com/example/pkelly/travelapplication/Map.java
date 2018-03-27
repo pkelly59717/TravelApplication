@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -477,6 +478,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
 
         if(placeInfo != null){
             try{
+                mSearchText.setText("");
                 String snippet = "Address: " + placeInfo.getAddress() + "\n" +
                         "Phone Number: " + placeInfo.getPhoneNumber() + "\n" +
                         "Website: " + placeInfo.getWebsiteUri() + "\n" +
