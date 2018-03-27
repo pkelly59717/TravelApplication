@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.pkelly.travelapplication.Home;
+import com.example.pkelly.travelapplication.Map;
 import com.example.pkelly.travelapplication.R;
 import com.example.pkelly.travelapplication.helpers.InputValidation;
 import com.example.pkelly.travelapplication.sql.DatabaseHelper;
@@ -119,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 , textInputEditTextPassword.getText().toString().trim())) {
 
 
-            Intent accountsIntent = new Intent(activity, Home.class);
+            Intent accountsIntent = new Intent(activity, Map.class);
             accountsIntent.putExtra("EMAIL", textInputEditTextEmail.getText().toString().trim());
             emptyInputEditText();
             startActivity(accountsIntent);
