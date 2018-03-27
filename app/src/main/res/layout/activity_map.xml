@@ -82,6 +82,16 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
         android:scaleType="centerCrop"
+        android:id="@+id/chat_btn"
+        android:src="@drawable/ic_chat"/>
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/chat_btn"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
         android:id="@+id/clear_map"
         android:src="@drawable/ic_clear"/>
 

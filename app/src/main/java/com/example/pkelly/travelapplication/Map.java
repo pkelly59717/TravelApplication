@@ -87,7 +87,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
 
     //widgets
     private AutoCompleteTextView mSearchText;
-    private ImageView mGps, mInfo, mPlacePicker, mClearMap;
+    private ImageView mGps, mInfo, mPlacePicker, mClearMap, mChat;
 
     //vars
     private Boolean mLocationPermissionsGranted = false;
@@ -133,6 +133,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         mInfo = (ImageView) findViewById(R.id.place_info);
         mPlacePicker = (ImageView) findViewById(R.id.place_picker);
         mClearMap = (ImageView) findViewById(R.id.clear_map);
+        mChat = (ImageView) findViewById(R.id.chat_btn);
         listPoints = new ArrayList<>();
 
         getLocationPermission();
@@ -217,6 +218,15 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             @Override
             public void onClick(View view) {
                 ClearMap();
+            }
+        });
+
+        mChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent getNameScreenIntent = new Intent(view.getContext(), ChatActivity.class);
+
+                startActivity(getNameScreenIntent);
             }
         });
 
@@ -440,11 +450,11 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                         if(task.isSuccessful()){
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM,
-                                    "My Location");
-
+                            if(currentLocation != null) {
+                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                        DEFAULT_ZOOM,
+                                        "My Location");
+                            }
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(Map.this, "unable to get current location", Toast.LENGTH_SHORT).show();
