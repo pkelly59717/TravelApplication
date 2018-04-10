@@ -1,15 +1,21 @@
 package com.example.pkelly.travelapplication.model;
 
-/**
- * Created by paolo on 07-Mar-18.
- */
+/*
+Created by Paul Kelly
+Matriculation Number:40282331
+SOC10101 Honours Project
+2017-2018
+*/
 
 public class User {
+
+    //variables
     private int id;
-        private String name;
+    private String name;
     private String email;
     private String password;
 
+    //getter and setter methods
     public int getId() {
         return id;
     }

@@ -4,12 +4,16 @@ import android.net.Uri;
 
 import com.google.android.gms.maps.model.LatLng;
 
-/**
- * Created by paolo on 05-Mar-18.
- */
+/*
+Created by Paul Kelly
+Matriculation Number:40282331
+SOC10101 Honours Project
+2017-2018
+*/
 
 public class PlaceInfo {
 
+    //variables
     private String name;
     private String address;
     private String phoneNumber;
@@ -35,6 +39,7 @@ public class PlaceInfo {
 
     }
 
+    //getter and setter methods for place info
     public String getName() {
         return name;
     }
@@ -99,6 +104,7 @@ public class PlaceInfo {
         this.attributions = attributions;
     }
 
+    //toString method parses all place info
     @Override
     public String toString() {
         return "PlaceInfo{" +

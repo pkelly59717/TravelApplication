@@ -1,9 +1,4 @@
-package com.example.pkelly.travelapplication;
-
-/**
- * Created by paolo on 05-Mar-18.
- */
-
+package com.example.pkelly.travelapplication.adapters;
 /*
  * Copyright (C) 2015 Google Inc. All Rights Reserved.
  *
@@ -19,7 +14,6 @@ package com.example.pkelly.travelapplication;
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;

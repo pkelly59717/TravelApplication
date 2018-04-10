@@ -1,4 +1,4 @@
-package com.example.pkelly.travelapplication;
+package com.example.pkelly.travelapplication.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -21,11 +21,14 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pkelly.travelapplication.adapters.CustomInfoWindowAdapter;
+import com.example.pkelly.travelapplication.helpers.DirectionsParser;
+import com.example.pkelly.travelapplication.adapters.PlaceAutoCompleteAdapter;
+import com.example.pkelly.travelapplication.R;
 import com.example.pkelly.travelapplication.model.PlaceInfo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -66,18 +69,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by paolo on 05-Mar-18.
- */
+/*
+Created by Paul Kelly
+Matriculation Number:40282331
+SOC10101 Honours Project
+2017-2018
+*/
 
 public class Map extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener{
 
+    //array list that stores latitude and longitude of list points
     ArrayList<LatLng> listPoints;
+    //Maximum number of markers on the map at one time
     private int maxClicks = 6;
-
     private static final String TAG = "MapActivity";
-
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -85,12 +91,11 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(-40, -168), new LatLng(71, 136));
-
     //widgets
     private AutoCompleteTextView mSearchText;
     private ImageView mGps, mInfo, mPlacePicker, mClearMap, mChat;
 
-    //vars
+    //variables
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -104,12 +109,14 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
 
     }
 
+    //opens map and shows message to user that the map is ready for use
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
 
+        //gets the current location of the users device
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
 
@@ -121,10 +128,12 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
+            //action void init
             init();
         }
     }
 
+    //populates map with search bar, current location, information, place picker, clear and chat buttons
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,14 +145,16 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         mClearMap = (ImageView) findViewById(R.id.clear_map);
         mChat = (ImageView) findViewById(R.id.chat_btn);
         listPoints = new ArrayList<>();
-
+        //finds current location
         getLocationPermission();
 
     }
 
+    //uses google maps and places api to populate map
     private void init(){
         Log.d(TAG, "init: initializing");
 
+        //builds map and populates with google places data
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -155,7 +166,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
 
         mPlaceAutocompleteAdapter = new PlaceAutoCompleteAdapter(this, mGoogleApiClient,
                 LAT_LNG_BOUNDS, null);
-
+        //autocomplete search function in place picker
         mSearchText.setAdapter(mPlaceAutocompleteAdapter);
 
         mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -166,7 +177,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                         || keyEvent.getAction() == KeyEvent.ACTION_DOWN
                         || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
 
-                    //execute our method for searching
+                    //execute method for searching
                     geoLocate();
                 }
 
@@ -174,6 +185,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
 
+        //gets device location when button is pressed
         mGps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -182,30 +194,37 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
 
+        //displays place information of slected location
         mInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: clicked place info");
                 try{
+                    //if info window is open, hides it
                     if(mMarker.isInfoWindowShown()){
                         mMarker.hideInfoWindow();
                     }else{
+                        //current place is parsed to string
                         Log.d(TAG, "onClick: place info: " + mPlace.toString());
                         mMarker.showInfoWindow();
                     }
+                 //null pointer exception catch
                 }catch (NullPointerException e){
                     Log.e(TAG, "onClick: NullPointerException: " + e.getMessage() );
                 }
             }
         });
 
+        //opens place picker when clicked
         mPlacePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                //builds place picker
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
                 try {
+                    //builds place picker on map activity
                     startActivityForResult(builder.build(Map.this), PLACE_PICKER_REQUEST);
                 } catch (GooglePlayServicesRepairableException e) {
                     Log.e(TAG, "onClick: GooglePlayServicesRepairableException: " + e.getMessage() );
@@ -215,6 +234,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
 
+        //clears the map of all current markers upon being clicked
         mClearMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -222,25 +242,28 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             }
         });
 
+        //opens chat window upon being clicked
         mChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent getNameScreenIntent = new Intent(view.getContext(), ChatActivity.class);
 
+                //open chat activity
                 startActivity(getNameScreenIntent);
             }
         });
 
+        //upon long click, marker is added to the map
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                //Reset marker when already 2
+                //Resets marker when same marker already exists
                 if (listPoints.size() == maxClicks) {
                     ClearMap();
                 }
-                //Save first point select
+                //Saves first point selected
                 listPoints.add(latLng);
-                //Create marker
+                //Creates marker
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
                 if(listPoints.size() < maxClicks) {
@@ -257,6 +280,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         hideSoftKeyboard();
     }
 
+    //if 2 ir more markers are on the map, creates path between them
     private void getLocation() {
         if (listPoints.size() >= 2) {
             //Create the URL to get request from first marker to second marker
@@ -286,6 +310,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         return url;
     }
 
+    //public class that creates a directions path between map markers
     public class TaskRequestDirections extends AsyncTask<String, Void, String> {
 
         @Override
@@ -302,12 +327,12 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            //Parse json here
             TaskParser taskParser = new TaskParser();
             taskParser.execute(s);
         }
     }
 
+    //creates the routes between selected markers on the map
     public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>> > {
 
         @Override
@@ -324,6 +349,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             return routes;
         }
 
+        //generates the routes between each map marker and sets a blue direction linking them all
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
             //Get list route and display it into the map
@@ -336,6 +362,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                 points = new ArrayList();
                 polylineOptions = new PolylineOptions();
 
+                //HashMap that parses the latitude and longitude of each map marker
                 for (HashMap<String, String> point : path) {
                     double lat = Double.parseDouble(point.get("lat"));
                     double lon = Double.parseDouble(point.get("lon"));
@@ -343,12 +370,14 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
                     points.add(new LatLng(lat,lon));
                 }
 
+                //adds polylines between each marker
                 polylineOptions.addAll(points);
                 polylineOptions.width(15);
                 polylineOptions.color(Color.BLUE);
                 polylineOptions.geodesic(true);
             }
 
+            //checks if no polylines are added and if not, places them
             if (polylineOptions!=null) {
                 mMap.addPolyline(polylineOptions);
             } else {
@@ -357,6 +386,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
 
         }
     }
+
 
     private String requestDirection(String reqUrl) throws IOException {
         String responseString = "";
@@ -400,6 +430,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         hideSoftKeyboard();
     }
 
+    //upon searching for place in placepicker, displays results of the search
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
@@ -412,6 +443,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         }
     }
 
+    //gets the location of seacrhed place and moves map to selected location
     private void geoLocate(){
         Log.d(TAG, "geoLocate: geolocating");
 
@@ -425,17 +457,18 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
             Log.e(TAG, "geoLocate: IOException: " + e.getMessage() );
         }
 
+        //adds address to list and parses it to string
         if(list.size() > 0){
             Address address = list.get(0);
 
             Log.d(TAG, "geoLocate: found a location: " + address.toString());
-            //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
 
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
                     address.getAddressLine(0));
         }
     }
 
+    //gets current location of the device being used
     private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
@@ -468,11 +501,10 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         }
     }
 
+    //moves map to selected place from the search
     private void moveCamera(LatLng latLng, float zoom, PlaceInfo placeInfo){
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-
-        //mMap.clear();
 
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(Map.this));
 
@@ -500,6 +532,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         hideSoftKeyboard();
     }
 
+    //allows user to manually move the camera around the map without having to use a search function
     private void moveCamera(LatLng latLng, float zoom, String title){
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -514,6 +547,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         hideSoftKeyboard();
     }
 
+    //initialises the map upon opening it
     private void initMap(){
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -521,6 +555,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         mapFragment.getMapAsync(Map.this);
     }
 
+    //gets location permissions of places from manifest
     private void getLocationPermission(){
         Log.d(TAG, "getLocationPermission: getting location permissions");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
@@ -544,6 +579,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         }
     }
 
+    //receives the permission granted result and initialises map
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.d(TAG, "onRequestPermissionsResult: called.");
@@ -568,6 +604,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         }
     }
 
+    //hides user keyboard
     private void hideSoftKeyboard(){
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
@@ -576,6 +613,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         --------------------------- google places API autocomplete suggestions -----------------
      */
 
+    //autocomplete view creator
     private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -590,6 +628,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback,
         }
     };
 
+    //updates the place picker with places details
     private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(@NonNull PlaceBuffer places) {

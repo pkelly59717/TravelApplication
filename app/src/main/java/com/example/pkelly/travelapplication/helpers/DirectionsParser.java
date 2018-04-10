@@ -1,4 +1,4 @@
-package com.example.pkelly.travelapplication;
+package com.example.pkelly.travelapplication.helpers;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -9,6 +9,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+/*
+Created by Paul Kelly
+Matriculation Number:40282331
+SOC10101 Honours Project
+2017-2018
+*/
 
 
 public class DirectionsParser {
@@ -63,7 +70,6 @@ public class DirectionsParser {
 
     /**
      * Method to decode polyline
-     * Source : http://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
      */
     private List decodePolyline(String encoded) {
 

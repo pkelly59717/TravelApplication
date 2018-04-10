@@ -29,9 +29,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".Home" />
-        <activity android:name=".Map" />
-        <activity android:name=".ChatActivity" >
+        <activity android:name=".activities.Map" />
+        <activity android:name=".activities.ChatActivity" >
         </activity>
     </application>
 

@@ -1,4 +1,4 @@
-package com.example.pkelly.travelapplication;
+package com.example.pkelly.travelapplication.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,14 +9,19 @@ import com.example.pkelly.travelapplication.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
-/**
- * Created by paolo on 05-Mar-18.
- */
+/*
+Created by Paul Kelly
+Matriculation Number:40282331
+SOC10101 Honours Project
+2017-2018
+*/
 
 public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
+    //variables
     private final View mWindow;
     private Context mContext;
+
 
     public CustomInfoWindowAdapter(Context context) {
         mContext = context;

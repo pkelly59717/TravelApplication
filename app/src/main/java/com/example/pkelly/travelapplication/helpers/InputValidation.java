@@ -8,18 +8,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-/**
- * Created by paolo on 07-Mar-18.
- */
+/*
+Created by Paul Kelly
+Matriculation Number:40282331
+SOC10101 Honours Project
+2017-2018
+*/
 
 public class InputValidation {
     private Context context;
 
-    /**
-     * constructor
-     *
-     * @param context
-     */
+    //constructor
     public InputValidation(Context context) {
         this.context = context;
     }
@@ -81,8 +80,6 @@ public class InputValidation {
 
     /**
      * method to Hide keyboard
-     *
-     * @param view
      */
     private void hideKeyboardFrom(View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);

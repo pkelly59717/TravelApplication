@@ -11,9 +11,12 @@ import com.example.pkelly.travelapplication.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by paolo on 07-Mar-18.
- */
+/*
+Created by Paul Kelly
+Matriculation Number:40282331
+SOC10101 Honours Project
+2017-2018
+*/
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 

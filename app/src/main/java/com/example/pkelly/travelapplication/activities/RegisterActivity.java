@@ -16,25 +16,39 @@ import com.example.pkelly.travelapplication.helpers.InputValidation;
 import com.example.pkelly.travelapplication.model.User;
 import com.example.pkelly.travelapplication.sql.DatabaseHelper;
 
+/*
+Created by Paul Kelly
+Matriculation Number:40282331
+SOC10101 Honours Project
+2017-2018
+*/
+
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final AppCompatActivity activity = RegisterActivity.this;
 
+    //scroll view
     private NestedScrollView nestedScrollView;
 
+    //input layouts
     private TextInputLayout textInputLayoutName;
     private TextInputLayout textInputLayoutEmail;
     private TextInputLayout textInputLayoutPassword;
     private TextInputLayout textInputLayoutConfirmPassword;
 
+    //text inputs
     private TextInputEditText textInputEditTextName;
     private TextInputEditText textInputEditTextEmail;
     private TextInputEditText textInputEditTextPassword;
     private TextInputEditText textInputEditTextConfirmPassword;
 
+    //buttons
     private AppCompatButton appCompatButtonRegister;
+
+    //text views
     private AppCompatTextView appCompatTextViewLoginLink;
 
+    //Objects
     private InputValidation inputValidation;
     private DatabaseHelper databaseHelper;
     private User user;
@@ -50,9 +64,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         initObjects();
     }
 
-    /**
-     * This method is to initialize views
-     */
+    //method used to initialise views
     private void initViews() {
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
 
@@ -72,18 +84,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    /**
-     * This method is to initialize listeners
-     */
+    //method used to initialize listeners
     private void initListeners() {
         appCompatButtonRegister.setOnClickListener(this);
         appCompatTextViewLoginLink.setOnClickListener(this);
 
     }
 
-    /**
-     * This method is to initialize objects to be used
-     */
+    //method used to initialize objects to be used
     private void initObjects() {
         inputValidation = new InputValidation(activity);
         databaseHelper = new DatabaseHelper(activity);
@@ -91,12 +99,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-
-    /**
-     * This implemented method is to listen the click on view
-     *
-     * @param v
-     */
+    //method used to listen to click in view
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -111,9 +114,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    /**
-     * This method is to validate the input text fields and post data to SQLite
-     */
+    //method used to validate text input fields and post data to SQLite
     private void postDataToSQLite() {
         if (!inputValidation.isInputEditTextFilled(textInputEditTextName, textInputLayoutName, getString(R.string.error_message_name))) {
             return;
@@ -153,9 +154,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    /**
-     * This method is to empty all input edit text
-     */
+    //method used to clear all text fields
     private void emptyInputEditText() {
         textInputEditTextName.setText(null);
         textInputEditTextEmail.setText(null);

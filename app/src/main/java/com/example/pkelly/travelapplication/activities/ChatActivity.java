@@ -1,4 +1,4 @@
-package com.example.pkelly.travelapplication;
+package com.example.pkelly.travelapplication.activities;
 
 import android.app.Activity;
 import android.database.DataSetObserver;
@@ -10,7 +10,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.pkelly.travelapplication.model.ChatMessage;
 import com.example.pkelly.travelapplication.R;
+import com.example.pkelly.travelapplication.adapters.ChatArrayAdapter;
+
+/*
+Created by Paul Kelly
+Matriculation Number:40282331
+SOC10101 Honours Project
+2017-2018
+*/
 
 public class ChatActivity extends Activity {
     private static final String TAG = "ChatActivity";
